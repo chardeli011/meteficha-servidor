@@ -17,6 +17,8 @@ app.use(
 app.get("/swagger", (req, res) => {
   res.sendFile(process.cwd() + "/swagger.json");
 });
+// Middleware para processar dados URL-encoded
+app.use(express.urlencoded({ extended: true }));
 app.get("/docs", (req, res) => {
   res.sendFile(process.cwd() + "/index.html");
 });
