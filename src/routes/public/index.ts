@@ -6,6 +6,7 @@ export const routerPublic = Router();
 
 routerPublic.get("/create-lead", async (req, res) => {
   console.log(req.body);
+  console.log(req.query);
 
   res.status(200).send("Lead created");
 });
