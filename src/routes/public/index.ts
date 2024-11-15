@@ -6,17 +6,35 @@ import formidable from "formidable";
 export const routerPublic = Router();
 
 routerPublic.get("/create-lead", async (req, res) => {
+  //vai receber um formData com os dados do lead
   const form = new formidable.IncomingForm();
-  console.log(req.body);
-  console.log(req.query);
 
-  form.parse(req, (err, fields) => {
+  form.parse(req, async (err, fields) => {
     if (err) {
-      res.status(500).send("Erro ao processar o formulário");
+      res.status(400).send("Bad request");
       return;
     }
-    console.log(fields); // Campos do formulário enviados
-    res.send("Dados recebidos com sucesso!");
+
+    const { name, email, phone } = fields;
+
+    if (!name || !email || !phone) {
+      res.status(400).send("Missing fields");
+      return;
+    }
+
+    try {
+      await prisma.lead.create({
+        data: {
+          nome: name[0],
+          telefone: phone[0],
+        },
+      });
+    } catch (error) {
+      res.status(500).send("Internal server error");
+      return;
+    }
+
+    res.status(200).send("Lead created");
   });
 
   res.status(200).send("Lead created");
